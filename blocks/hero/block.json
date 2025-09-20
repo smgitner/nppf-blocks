@@ -1,0 +1,44 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/hero",
+  "title": "Hero Section",
+  "category": "nppf-blocks",
+  "icon": "cover-image",
+  "description": "Full-screen hero section with background image",
+  "keywords": ["hero", "banner", "header"],
+  "supports": {
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "align": "full",
+  "attributes": {
+    "subtitle": {
+      "type": "string",
+      "default": "2024 NPPF Story Grant Recipient"
+    },
+    "title": {
+      "type": "string",
+      "default": "Robin Rayne"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "LEARN MORE"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#learn-more"
+    }
+  },
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "editorStyle": "file:./editor.css",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}

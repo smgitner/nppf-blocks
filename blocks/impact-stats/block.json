@@ -1,0 +1,39 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/impact-stats",
+  "title": "Impact Stats",
+  "category": "nppf-blocks",
+  "icon": "chart-bar",
+  "description": "Display impact statistics in a grid",
+  "supports": {
+    "align": ["wide", "full"]
+  },
+  "align": "full",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "NPPF's Impact to Date"
+    },
+    "stats": {
+      "type": "array",
+      "default": [
+        {
+          "number": "150+",
+          "label": "Grants & Scholarships awarded"
+        },
+        {
+          "number": "$2M+",
+          "label": "Annual portfolio funded"
+        },
+        {
+          "number": "25",
+          "label": "Years of photojournalism career advocacy"
+        }
+      ]
+    }
+  },
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}

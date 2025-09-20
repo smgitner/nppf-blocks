@@ -1,0 +1,32 @@
+/* Admin styles for NPPF Blocks */
+.nppf-blocks-admin-page {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.nppf-blocks-admin-page .card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.nppf-blocks-admin-page .success {
+    color: #059669;
+    font-weight: bold;
+}
+
+.nppf-blocks-admin-page .error {
+    color: #DC2626;
+    font-weight: bold;
+}
+
+.nppf-blocks-admin-page ul {
+    list-style: none;
+    padding: 0;
+}
+
+.nppf-blocks-admin-page ul li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}

@@ -1,0 +1,53 @@
+/* Testimonial Block Editor Styles - Match Frontend */
+.editor-styles-wrapper .nppf-testimonial {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #F7FAFC 0%, #E2E8F0 100%);
+}
+
+.editor-styles-wrapper .nppf-testimonial-image {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.editor-styles-wrapper .nppf-testimonial-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.editor-styles-wrapper .nppf-testimonial-quote {
+    font-size: 1.75rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-style: italic;
+    color: #1A202C !important;
+    position: relative;
+}
+
+.editor-styles-wrapper .nppf-testimonial-quote::before {
+    content: '"';
+    font-size: 4rem;
+    color: #4A90E2;
+    position: absolute;
+    top: -1rem;
+    left: -2rem;
+    font-family: serif;
+}
+
+.editor-styles-wrapper .nppf-testimonial-author {
+    color: #A0AEC0 !important;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.editor-styles-wrapper .nppf-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.editor-styles-wrapper .nppf-grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: center;
+}
+

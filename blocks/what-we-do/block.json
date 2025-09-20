@@ -1,0 +1,42 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/what-we-do",
+  "title": "What We Do",
+  "category": "nppf-blocks",
+  "icon": "welcome-learn-more",
+  "description": "Two-column section with text and image",
+  "supports": {
+    "align": ["wide", "full"]
+  },
+  "align": "full",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "What we do"
+    },
+    "content": {
+      "type": "string",
+      "default": "The National Press Photographers Foundation (NPPF) advances photojournalism through educational programming and by providing aid and opportunities to individual working photojournalists in the field of visual communication."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "LEARN MORE"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}

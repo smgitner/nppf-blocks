@@ -1,0 +1,34 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/testimonial",
+  "title": "Testimonial",
+  "category": "nppf-blocks",
+  "icon": "format-quote",
+  "description": "Testimonial quote with image",
+  "supports": {
+    "align": ["wide", "full"]
+  },
+  "align": "full",
+  "attributes": {
+    "quote": {
+      "type": "string",
+      "default": "Thank you to the whole NPPF team. Your support to me and many other students means so much to us starting out our careers."
+    },
+    "author": {
+      "type": "string",
+      "default": "� 2024 NPPF Grant Recipient"
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}

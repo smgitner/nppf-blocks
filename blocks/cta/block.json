@@ -1,0 +1,30 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/cta",
+  "title": "Call to Action",
+  "category": "nppf-blocks",
+  "icon": "megaphone",
+  "description": "Call to action section with button",
+  "supports": {
+    "align": ["wide", "full"]
+  },
+  "align": "full",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Make a lasting impact. Become a donor today."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "DONATE"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#donate"
+    }
+  },
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}

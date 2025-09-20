@@ -1,0 +1,38 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/scholarship-grid",
+  "title": "Scholarship Grid",
+  "category": "nppf-blocks",
+  "icon": "grid-view",
+  "description": "Grid of scholarship recipients",
+  "supports": {
+    "align": ["wide", "full"]
+  },
+  "align": "full",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Our Scholarship Recipients"
+    },
+    "description": {
+      "type": "string",
+      "default": "These talented photojournalists represent the future of visual storytelling."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "MEET OUR SCHOLARS"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#scholars"
+    },
+    "recipients": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}
