@@ -19,10 +19,11 @@ function nppf_blocks_register_blocks() {
         $dirs = glob($base . '/*', GLOB_ONLYDIR);
         
         // Debug: Log what we found
-        nppf_log('Block registration started', ['base' => $base, 'dirs_found' => $dirs]);
+        error_log('NPPF: Block registration started - base: ' . $base);
+        error_log('NPPF: Found ' . count($dirs) . ' directories: ' . implode(', ', $dirs));
         
         if (!$dirs) {
-            nppf_log('No block directories found', ['base' => $base]);
+            error_log('NPPF: No block directories found - base: ' . $base);
             return;
         }
 
@@ -30,16 +31,17 @@ function nppf_blocks_register_blocks() {
             try {
                 $block_json = $dir . '/block.json';
                 if (file_exists($block_json)) {
+                    error_log('NPPF: Registering block: ' . basename($dir));
                     $result = register_block_type($dir);
-                    nppf_log('Block registered', ['dir' => basename($dir), 'result' => $result]);
+                    error_log('NPPF: Block registration result: ' . ($result ? 'SUCCESS' : 'FAILED'));
                 } else {
-                    nppf_log('No block.json found', ['dir' => $dir]);
+                    error_log('NPPF: No block.json found in: ' . $dir);
                 }
             } catch (Throwable $e) {
-                nppf_log('Block register failed', ['dir' => $dir, 'error' => $e->getMessage()]);
+                error_log('NPPF: Block register failed for ' . $dir . ' - Error: ' . $e->getMessage());
             }
         }
     } catch (Throwable $e) {
-        nppf_log('register_blocks wrapper error', ['error' => $e->getMessage()]);
+        error_log('NPPF: register_blocks wrapper error - ' . $e->getMessage());
     }
 }
