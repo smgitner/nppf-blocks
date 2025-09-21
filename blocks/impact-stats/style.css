@@ -10,7 +10,11 @@
 }
 
 .nppf-title-white {
-    color: white;
+    color: white !important;
+}
+
+.nppf-impact-stats .nppf-title-white {
+    color: white !important;
 }
 
 .nppf-stats-grid {
