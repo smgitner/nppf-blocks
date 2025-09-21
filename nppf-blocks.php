@@ -123,7 +123,6 @@ function nppf_blocks_diagnostics_page() {
     
     $blocks = array(
         'nppf-blocks/hero',
-        'nppf-blocks/what-we-do',
         'nppf-blocks/impact-stats',
         'nppf-blocks/testimonial',
         'nppf-blocks/cta'
