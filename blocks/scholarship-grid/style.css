@@ -1,0 +1,7 @@
+/* Deprecated block - minimal styling */
+.nppf-deprecated-block {
+    padding: 2rem;
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    text-align: center;
+}
