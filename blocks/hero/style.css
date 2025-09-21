@@ -11,13 +11,9 @@
     background-attachment: fixed;
 }
 
+/* Overlay removed - no tint */
 .nppf-hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+    display: none;
 }
 
 .nppf-hero-content {
