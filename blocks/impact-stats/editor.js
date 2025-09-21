@@ -144,11 +144,4 @@
         );
     }
 
-    // Register the block using the standard method
-    wp.blocks.registerBlockType('nppf-blocks/impact-stats', {
-        edit: Edit,
-        save: function() {
-            return null; // Dynamic block
-        }
-    });
 })();

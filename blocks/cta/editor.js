@@ -98,11 +98,4 @@
         );
     }
 
-    // Register the block
-    wp.blocks.registerBlockType('nppf-blocks/cta', {
-        edit: Edit,
-        save: function() {
-            return null; // Dynamic block
-        }
-    });
 })();

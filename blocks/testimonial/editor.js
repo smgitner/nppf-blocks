@@ -37,11 +37,4 @@
         );
     }
 
-    // Register the block
-    wp.blocks.registerBlockType('nppf-blocks/testimonial', {
-        edit: Edit,
-        save: function() {
-            return null; // Dynamic block
-        }
-    });
 })();
