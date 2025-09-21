@@ -19,11 +19,4 @@
         );
     }
 
-    // Register the block
-    wp.blocks.registerBlockType('nppf-blocks/scholarship-grid', {
-        edit: Edit,
-        save: function() {
-            return null; // Dynamic block
-        }
-    });
 })();

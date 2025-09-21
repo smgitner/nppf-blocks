@@ -19,11 +19,4 @@
         );
     }
 
-    // Register the block
-    wp.blocks.registerBlockType('nppf-blocks/what-we-do', {
-        edit: Edit,
-        save: function() {
-            return null; // Dynamic block
-        }
-    });
 })();
