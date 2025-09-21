@@ -1,7 +1,7 @@
 (function() {
     const { __ } = wp.i18n;
     const { useBlockProps, InspectorControls, MediaUpload, RichText, LinkControl } = wp.blockEditor;
-    const { PanelBody, Button } = wp.components;
+    const { PanelBody, Button, TextControl, TextareaControl } = wp.components;
     const { useMemo, useCallback, useEffect } = wp.element;
     const { useSelect } = wp.data;
 
@@ -122,7 +122,27 @@
 
         return wp.element.createElement(wp.element.Fragment, null,
             wp.element.createElement(InspectorControls, null,
-                wp.element.createElement(PanelBody, { title: __('Hero Settings', 'nppf-blocks') },
+                wp.element.createElement(PanelBody, { title: __('Hero Content', 'nppf-blocks'), initialOpen: true },
+                    wp.element.createElement(TextControl, {
+                        label: __('Subtitle', 'nppf-blocks'),
+                        value: subtitle,
+                        onChange: (value) => setAttributes({ subtitle: value }),
+                        placeholder: __('Enter subtitle...', 'nppf-blocks')
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: __('Title', 'nppf-blocks'),
+                        value: title,
+                        onChange: (value) => setAttributes({ title: value }),
+                        placeholder: __('Enter title...', 'nppf-blocks')
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: __('Button Text', 'nppf-blocks'),
+                        value: buttonText,
+                        onChange: (value) => setAttributes({ buttonText: value }),
+                        placeholder: __('Enter button text...', 'nppf-blocks')
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: __('Background Image', 'nppf-blocks') },
                     wp.element.createElement(MediaUpload, {
                         onSelect: (media) => setAttributes({ backgroundImage: media.url }),
                         allowedTypes: ['image'],
@@ -132,7 +152,7 @@
                         }, backgroundImage ? __('Change Background', 'nppf-blocks') : __('Select Background', 'nppf-blocks'))
                     })
                 ),
-                wp.element.createElement(PanelBody, { title: __('Button Link', 'nppf-blocks'), initialOpen: true },
+                wp.element.createElement(PanelBody, { title: __('Button Link', 'nppf-blocks') },
                     wp.element.createElement(LinkControl, {
                         value: linkValue,
                         onChange: onLinkChange,
@@ -150,27 +170,15 @@
             wp.element.createElement('div', blockProps,
                 wp.element.createElement('div', { className: 'nppf-hero-overlay' }),
                 wp.element.createElement('div', { className: 'nppf-hero-content' },
-                    wp.element.createElement(RichText, {
-                        tagName: 'p',
-                        className: 'nppf-hero-subtitle',
-                        value: subtitle,
-                        onChange: (value) => setAttributes({ subtitle: value }),
-                        placeholder: __('Subtitle', 'nppf-blocks')
-                    }),
-                    wp.element.createElement(RichText, {
-                        tagName: 'h1',
-                        className: 'nppf-hero-title',
-                        value: title,
-                        onChange: (value) => setAttributes({ title: value }),
-                        placeholder: __('Title', 'nppf-blocks')
-                    }),
-                    wp.element.createElement(RichText, {
-                        tagName: 'span',
-                        className: 'nppf-btn nppf-btn-outline',
-                        value: buttonText,
-                        onChange: (value) => setAttributes({ buttonText: value }),
-                        placeholder: __('Button text', 'nppf-blocks')
-                    })
+                    wp.element.createElement('p', { className: 'nppf-hero-subtitle' },
+                        subtitle || __('Subtitle', 'nppf-blocks')
+                    ),
+                    wp.element.createElement('h1', { className: 'nppf-hero-title' },
+                        title || __('Title', 'nppf-blocks')
+                    ),
+                    wp.element.createElement('span', { className: 'nppf-btn nppf-btn-outline' },
+                        buttonText || __('Button text', 'nppf-blocks')
+                    )
                 )
             )
         );
