@@ -2,6 +2,13 @@
 defined('ABSPATH') || exit;
 
 function nppf_blocks_register_blocks() {
+    // Prevent duplicate registrations
+    static $registered = false;
+    if ($registered) {
+        return;
+    }
+    $registered = true;
+    
     try {
         // Register all blocks by scanning /blocks
         $base = plugin_dir_path(__FILE__) . '../blocks';

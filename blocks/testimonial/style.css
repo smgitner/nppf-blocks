@@ -3,18 +3,6 @@
     background: linear-gradient(135deg, #F7FAFC 0%, #E2E8F0 100%);
 }
 
-.nppf-testimonial-image {
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-}
-
-.nppf-testimonial-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .nppf-testimonial-quote {
     font-size: 1.75rem;
     line-height: 1.6;
@@ -38,4 +26,15 @@
     color: #A0AEC0;
     font-weight: 600;
     font-size: 1.125rem;
+}
+
+.nppf-author-name {
+    font-weight: 600;
+    color: #1A202C;
+}
+
+.nppf-author-title {
+    color: #718096;
+    font-size: 1rem;
+    margin-top: 0.25rem;
 }

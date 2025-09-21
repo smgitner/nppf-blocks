@@ -1,10 +1,71 @@
 (function() {
     const { __ } = wp.i18n;
-    const { useBlockProps, InspectorControls, MediaUpload, RichText } = wp.blockEditor;
-    const { PanelBody, Button, TextControl } = wp.components;
+    const { useBlockProps, InspectorControls, MediaUpload, RichText, LinkControl } = wp.blockEditor;
+    const { PanelBody, Button } = wp.components;
+    const { useMemo, useCallback, useEffect } = wp.element;
 
     function Edit({ attributes, setAttributes }) {
-        const { subtitle, title, backgroundImage, buttonText, buttonUrl } = attributes;
+        const { subtitle, title, backgroundImage, buttonText, buttonUrl, buttonLink, buttonLinkPage, buttonLinkPost, buttonLinkRecipient } = attributes;
+
+        // Normalize the link object so LinkControl always has usable defaults.
+        const linkValue = useMemo(() => {
+            if (buttonLink && typeof buttonLink === 'object') {
+                return {
+                    url: buttonLink.url || '',
+                    opensInNewTab: !!buttonLink.opensInNewTab,
+                    title: buttonLink.title || '',
+                    kind: buttonLink.kind,
+                    type: buttonLink.type,
+                    id: buttonLink.id || 0,
+                };
+            }
+            return { url: '', opensInNewTab: false, title: '' };
+        }, [buttonLink]);
+
+        // Migrate the legacy `buttonUrl` attribute into the link object exactly once.
+        useEffect(() => {
+            if (linkValue.url || !buttonUrl) {
+                return;
+            }
+
+            setAttributes({
+                buttonLink: {
+                    url: buttonUrl,
+                    opensInNewTab: false,
+                    title: '',
+                },
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+
+        const onLinkChange = useCallback((newLink) => {
+            const normalized = {
+                url: newLink?.url || '',
+                opensInNewTab: !!newLink?.opensInNewTab,
+                title: newLink?.title || '',
+                kind: newLink?.kind,
+                type: newLink?.type,
+                id: newLink?.id || 0,
+            };
+
+            setAttributes({
+                buttonLink: normalized,
+                buttonUrl: normalized.url,
+                buttonLinkType: 'url',
+            });
+        }, [setAttributes]);
+
+        const onLinkRemove = useCallback(() => {
+            setAttributes({
+                buttonLink: { url: '', opensInNewTab: false, title: '' },
+                buttonUrl: '',
+                buttonLinkType: 'url',
+                buttonLinkPage: 0,
+                buttonLinkPost: 0,
+                buttonLinkRecipient: 0,
+            });
+        }, [setAttributes]);
+
         const blockProps = useBlockProps({ 
             className: 'nppf-hero',
             style: { 
@@ -27,11 +88,20 @@
                             onClick: open, 
                             variant: "primary" 
                         }, backgroundImage ? __('Change Background', 'nppf-blocks') : __('Select Background', 'nppf-blocks'))
-                    }),
-                    wp.element.createElement(TextControl, {
-                        label: __('Button URL', 'nppf-blocks'),
-                        value: buttonUrl,
-                        onChange: (value) => setAttributes({ buttonUrl: value })
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: __('Button Link', 'nppf-blocks'), initialOpen: true },
+                    wp.element.createElement(LinkControl, {
+                        value: linkValue,
+                        onChange: onLinkChange,
+                        onRemove: onLinkRemove,
+                        forceIsEditingLink: !linkValue.url,
+                        settings: [
+                            {
+                                id: 'opensInNewTab',
+                                title: __('Open in new tab', 'nppf-blocks')
+                            }
+                        ]
                     })
                 )
             ),

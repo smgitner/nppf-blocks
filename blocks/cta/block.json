@@ -14,6 +14,10 @@
       "type": "string",
       "default": "Make a lasting impact. Become a donor today."
     },
+    "subtitle": {
+      "type": "string",
+      "default": ""
+    },
     "buttonText": {
       "type": "string",
       "default": "DONATE"
