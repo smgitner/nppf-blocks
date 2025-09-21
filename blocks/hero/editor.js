@@ -3,9 +3,10 @@
     const { useBlockProps, InspectorControls, MediaUpload, RichText, LinkControl } = wp.blockEditor;
     const { PanelBody, Button } = wp.components;
     const { useMemo, useCallback, useEffect } = wp.element;
+    const { useSelect } = wp.data;
 
     function Edit({ attributes, setAttributes }) {
-        const { subtitle, title, backgroundImage, buttonText, buttonUrl, buttonLink, buttonLinkPage, buttonLinkPost, buttonLinkRecipient } = attributes;
+        const { subtitle, title, backgroundImage, buttonText, buttonUrl, buttonLink, buttonLinkPage, buttonLinkPost, buttonLinkRecipient, buttonLinkType } = attributes;
 
         // Normalize the link object so LinkControl always has usable defaults.
         const linkValue = useMemo(() => {
@@ -24,28 +25,69 @@
 
         // Migrate the legacy `buttonUrl` attribute into the link object exactly once.
         useEffect(() => {
-            if (linkValue.url || !buttonUrl) {
+            if (!linkValue.url && buttonUrl) {
+                setAttributes({
+                    buttonLink: {
+                        url: buttonUrl,
+                        opensInNewTab: false,
+                        title: '',
+                    },
+                });
+            }
+        }, [linkValue.url, buttonUrl, setAttributes]);
+
+        const legacyLinkRecord = useSelect(
+            (select) => {
+                if (linkValue.url || buttonUrl) {
+                    return null;
+                }
+
+                const coreSelect = select('core');
+
+                if (buttonLinkPage) {
+                    return coreSelect.getEntityRecord('postType', 'page', buttonLinkPage);
+                }
+
+                if (buttonLinkPost) {
+                    return coreSelect.getEntityRecord('postType', 'post', buttonLinkPost);
+                }
+
+                if (buttonLinkRecipient) {
+                    return coreSelect.getEntityRecord('postType', 'recipient', buttonLinkRecipient);
+                }
+
+                return null;
+            },
+            [linkValue.url, buttonUrl, buttonLinkPage, buttonLinkPost, buttonLinkRecipient]
+        );
+
+        useEffect(() => {
+            if (linkValue.url || buttonUrl) {
                 return;
             }
 
-            setAttributes({
-                buttonLink: {
-                    url: buttonUrl,
-                    opensInNewTab: false,
-                    title: '',
-                },
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
+            if (legacyLinkRecord && legacyLinkRecord.link) {
+                setAttributes({
+                    buttonLink: {
+                        url: legacyLinkRecord.link,
+                        opensInNewTab: false,
+                        title: legacyLinkRecord.title ? legacyLinkRecord.title.rendered || legacyLinkRecord.title : '',
+                    },
+                    buttonUrl: legacyLinkRecord.link,
+                    buttonLinkType: 'url',
+                });
+            }
+        }, [legacyLinkRecord, linkValue.url, buttonUrl, setAttributes]);
 
         const onLinkChange = useCallback((newLink) => {
+            const safeLink = newLink || {};
             const normalized = {
-                url: newLink?.url || '',
-                opensInNewTab: !!newLink?.opensInNewTab,
-                title: newLink?.title || '',
-                kind: newLink?.kind,
-                type: newLink?.type,
-                id: newLink?.id || 0,
+                url: safeLink.url || '',
+                opensInNewTab: safeLink.opensInNewTab ? true : false,
+                title: safeLink.title || '',
+                kind: safeLink.kind,
+                type: safeLink.type,
+                id: safeLink.id || 0,
             };
 
             setAttributes({
@@ -133,5 +175,12 @@
             )
         );
     }
+
+    wp.blocks.registerBlockType('nppf-blocks/hero', {
+        edit: Edit,
+        save: function() {
+            return null;
+        },
+    });
 
 })();

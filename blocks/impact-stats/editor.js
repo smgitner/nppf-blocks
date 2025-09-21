@@ -144,4 +144,11 @@
         );
     }
 
+    wp.blocks.registerBlockType('nppf-blocks/impact-stats', {
+        edit: Edit,
+        save: function() {
+            return null;
+        },
+    });
+
 })();

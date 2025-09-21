@@ -19,4 +19,11 @@
         );
     }
 
+    wp.blocks.registerBlockType('nppf-blocks/scholarship-grid', {
+        edit: Edit,
+        save: function() {
+            return null;
+        },
+    });
+
 })();

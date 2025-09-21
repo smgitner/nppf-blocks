@@ -25,6 +25,31 @@
     "buttonUrl": {
       "type": "string",
       "default": "#donate"
+    },
+    "buttonLink": {
+      "type": "object",
+      "default": {
+        "url": "",
+        "opensInNewTab": false,
+        "title": ""
+      }
+    },
+    "buttonLinkType": {
+      "type": "string",
+      "default": "url",
+      "enum": ["url", "page", "post", "recipient"]
+    },
+    "buttonLinkPage": {
+      "type": "number",
+      "default": 0
+    },
+    "buttonLinkPost": {
+      "type": "number",
+      "default": 0
+    },
+    "buttonLinkRecipient": {
+      "type": "number",
+      "default": 0
     }
   },
   "textdomain": "nppf-blocks",

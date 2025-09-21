@@ -1,101 +1,190 @@
 (function() {
     const { __ } = wp.i18n;
-    const { useBlockProps, RichText, InspectorControls } = wp.blockEditor;
-    const { PanelBody, TextControl } = wp.components;
-    const { useState, useEffect } = wp.element;
+    const { useBlockProps, InspectorControls, RichText, LinkControl } = wp.blockEditor;
+    const { PanelBody } = wp.components;
+    const { useMemo, useCallback, useEffect } = wp.element;
+    const { useSelect } = wp.data;
 
     function Edit({ attributes, setAttributes }) {
-        const { heading, subtitle, buttonText, buttonUrl } = attributes;
-        const blockProps = useBlockProps();
+        const { heading, subtitle, buttonText, buttonUrl, buttonLink, buttonLinkPage, buttonLinkPost, buttonLinkRecipient, buttonLinkType } = attributes;
 
-        const defaultHeading = __('Make a lasting impact. Become a donor today.', 'nppf-blocks');
-        const defaultButtonText = __('DONATE', 'nppf-blocks');
-        const defaultButtonUrl = '#donate';
+        // Normalize the link object so LinkControl always has usable defaults.
+        const linkValue = useMemo(() => {
+            if (buttonLink && typeof buttonLink === 'object') {
+                return {
+                    url: buttonLink.url || '',
+                    opensInNewTab: !!buttonLink.opensInNewTab,
+                    title: buttonLink.title || '',
+                    kind: buttonLink.kind,
+                    type: buttonLink.type,
+                    id: buttonLink.id || 0,
+                };
+            }
+            return { url: '', opensInNewTab: false, title: '' };
+        }, [buttonLink]);
 
-        const [headingValue, setHeadingValue] = useState(typeof heading === 'undefined' ? defaultHeading : (heading || ''));
-        const [subtitleValue, setSubtitleValue] = useState(subtitle || '');
-        const [buttonTextValue, setButtonTextValue] = useState(typeof buttonText === 'undefined' ? defaultButtonText : (buttonText || ''));
-        const buttonUrlValue = typeof buttonUrl === 'undefined' ? defaultButtonUrl : buttonUrl;
-
-        // Ensure block starts with metadata defaults when attributes are missing (new block insert).
+        // Migrate the legacy `buttonUrl` attribute into the link object exactly once.
         useEffect(() => {
-            if (typeof heading === 'undefined') {
-                setAttributes({ heading: defaultHeading });
-                setHeadingValue(defaultHeading);
+            if (!linkValue.url && buttonUrl) {
+                setAttributes({
+                    buttonLink: {
+                        url: buttonUrl,
+                        opensInNewTab: false,
+                        title: '',
+                    },
+                });
+            }
+        }, [linkValue.url, buttonUrl, setAttributes]);
+
+        const legacyLinkRecord = useSelect(
+            (select) => {
+                if (linkValue.url || buttonUrl) {
+                    return null;
+                }
+
+                const coreSelect = select('core');
+
+                if (buttonLinkPage) {
+                    return coreSelect.getEntityRecord('postType', 'page', buttonLinkPage);
+                }
+
+                if (buttonLinkPost) {
+                    return coreSelect.getEntityRecord('postType', 'post', buttonLinkPost);
+                }
+
+                if (buttonLinkRecipient) {
+                    return coreSelect.getEntityRecord('postType', 'recipient', buttonLinkRecipient);
+                }
+
+                return null;
+            },
+            [linkValue.url, buttonUrl, buttonLinkPage, buttonLinkPost, buttonLinkRecipient]
+        );
+
+        useEffect(() => {
+            if (linkValue.url || buttonUrl) {
                 return;
             }
-            setHeadingValue(heading || '');
-        }, [heading]);
 
-        useEffect(() => {
-            setSubtitleValue(subtitle || '');
-        }, [subtitle]);
-
-        useEffect(() => {
-            if (typeof buttonText === 'undefined') {
-                setAttributes({ buttonText: defaultButtonText });
-                setButtonTextValue(defaultButtonText);
-                return;
+            if (legacyLinkRecord && legacyLinkRecord.link) {
+                setAttributes({
+                    buttonLink: {
+                        url: legacyLinkRecord.link,
+                        opensInNewTab: false,
+                        title: legacyLinkRecord.title ? legacyLinkRecord.title.rendered || legacyLinkRecord.title : '',
+                    },
+                    buttonUrl: legacyLinkRecord.link,
+                    buttonLinkType: 'url',
+                });
             }
-            setButtonTextValue(buttonText || '');
-        }, [buttonText]);
+        }, [legacyLinkRecord, linkValue.url, buttonUrl, setAttributes]);
 
-        useEffect(() => {
-            if (typeof buttonUrl === 'undefined') {
-                setAttributes({ buttonUrl: defaultButtonUrl });
-            }
-        }, [buttonUrl]);
+        const onLinkChange = useCallback((newLink) => {
+            const safeLink = newLink || {};
+            const normalized = {
+                url: safeLink.url || '',
+                opensInNewTab: safeLink.opensInNewTab ? true : false,
+                title: safeLink.title || '',
+                kind: safeLink.kind,
+                type: safeLink.type,
+                id: safeLink.id || 0,
+            };
+
+            setAttributes({
+                buttonLink: normalized,
+                buttonUrl: normalized.url,
+                buttonLinkType: 'url',
+            });
+        }, [setAttributes]);
+
+        const onLinkRemove = useCallback(() => {
+            setAttributes({
+                buttonLink: { url: '', opensInNewTab: false, title: '' },
+                buttonUrl: '',
+                buttonLinkType: 'url',
+                buttonLinkPage: 0,
+                buttonLinkPost: 0,
+                buttonLinkRecipient: 0,
+            });
+        }, [setAttributes]);
+
+        const blockProps = useBlockProps({ 
+            className: 'nppf-cta'
+        });
 
         return wp.element.createElement(wp.element.Fragment, null,
             wp.element.createElement(InspectorControls, null,
-                wp.element.createElement(PanelBody, { title: __('Button settings', 'nppf-blocks') },
-                    wp.element.createElement(TextControl, {
-                        label: __('Button URL', 'nppf-blocks'),
-                        value: buttonUrlValue,
-                        onChange: (value) => setAttributes({ buttonUrl: value || '' })
+                wp.element.createElement(PanelBody, { title: __('CTA Settings', 'nppf-blocks') },
+                    wp.element.createElement(RichText, {
+                        tagName: 'h2',
+                        className: 'nppf-title',
+                        value: heading,
+                        onChange: (value) => setAttributes({ heading: value }),
+                        placeholder: __('Heading', 'nppf-blocks')
+                    }),
+                    wp.element.createElement(RichText, {
+                        tagName: 'p',
+                        className: 'nppf-subtitle',
+                        value: subtitle,
+                        onChange: (value) => setAttributes({ subtitle: value }),
+                        placeholder: __('Subtitle', 'nppf-blocks')
+                    }),
+                    wp.element.createElement(RichText, {
+                        tagName: 'span',
+                        className: 'nppf-btn nppf-btn-outline',
+                        value: buttonText,
+                        onChange: (value) => setAttributes({ buttonText: value }),
+                        placeholder: __('Button text', 'nppf-blocks')
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: __('Button Link', 'nppf-blocks'), initialOpen: true },
+                    wp.element.createElement(LinkControl, {
+                        value: linkValue,
+                        onChange: onLinkChange,
+                        onRemove: onLinkRemove,
+                        forceIsEditingLink: !linkValue.url,
+                        settings: [
+                            {
+                                id: 'opensInNewTab',
+                                title: __('Open in new tab', 'nppf-blocks')
+                            }
+                        ]
                     })
                 )
             ),
             wp.element.createElement('div', blockProps,
-                wp.element.createElement('div', { className: 'nppf-cta' },
-                    wp.element.createElement('div', { className: 'nppf-text-center' },
-                        wp.element.createElement(RichText, {
-                            tagName: 'h2',
-                            className: 'nppf-title',
-                            value: headingValue,
-                            onChange: (value) => {
-                                setHeadingValue(value || '');
-                                setAttributes({ heading: value || '' });
-                            },
-                            placeholder: __('Title', 'nppf-blocks'),
-                            allowedFormats: []
-                        }),
-                        wp.element.createElement(RichText, {
-                            tagName: 'p',
-                            className: 'nppf-subtitle',
-                            value: subtitleValue,
-                            onChange: (value) => {
-                                setSubtitleValue(value || '');
-                                setAttributes({ subtitle: value || '' });
-                            },
-                            placeholder: __('Subtitle', 'nppf-blocks'),
-                            allowedFormats: []
-                        }),
-                        wp.element.createElement(RichText, {
-                            tagName: 'span',
-                            className: 'nppf-btn nppf-btn-outline',
-                            value: buttonTextValue,
-                            onChange: (value) => {
-                                setButtonTextValue(value || '');
-                                setAttributes({ buttonText: value || '' });
-                            },
-                            placeholder: __('Button text', 'nppf-blocks'),
-                            allowedFormats: []
-                        })
-                    )
+                wp.element.createElement('div', { className: 'nppf-container nppf-text-center' },
+                    wp.element.createElement(RichText, {
+                        tagName: 'h2',
+                        className: 'nppf-title nppf-title-white',
+                        value: heading,
+                        onChange: (value) => setAttributes({ heading: value }),
+                        placeholder: __('Make a lasting impact. Become a donor today.', 'nppf-blocks')
+                    }),
+                    wp.element.createElement(RichText, {
+                        tagName: 'p',
+                        className: 'nppf-subtitle',
+                        value: subtitle,
+                        onChange: (value) => setAttributes({ subtitle: value }),
+                        placeholder: __('Subtitle', 'nppf-blocks')
+                    }),
+                    wp.element.createElement(RichText, {
+                        tagName: 'span',
+                        className: 'nppf-btn nppf-btn-outline',
+                        value: buttonText,
+                        onChange: (value) => setAttributes({ buttonText: value }),
+                        placeholder: __('DONATE', 'nppf-blocks')
+                    })
                 )
             )
         );
     }
+
+    wp.blocks.registerBlockType('nppf-blocks/cta', {
+        edit: Edit,
+        save: function() {
+            return null;
+        },
+    });
 
 })();

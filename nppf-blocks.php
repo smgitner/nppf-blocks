@@ -72,22 +72,29 @@ add_action('init', 'nppf_blocks_register_blocks');
 
 // Enqueue block editor scripts
 function nppf_blocks_enqueue_editor_scripts() {
+    error_log('NPPF: Enqueuing editor scripts');
+    
     // Get all block directories
     $blocks_dir = NPPF_BLOCKS_PLUGIN_DIR . 'blocks';
     $block_dirs = glob($blocks_dir . '/*', GLOB_ONLYDIR);
+    
+    error_log('NPPF: Found ' . count($block_dirs) . ' block directories for script enqueuing');
     
     foreach ($block_dirs as $block_dir) {
         $block_name = basename($block_dir);
         $editor_script = $block_dir . '/editor.js';
         
         if (file_exists($editor_script)) {
+            error_log('NPPF: Enqueuing script for block: ' . $block_name);
             wp_enqueue_script(
                 'nppf-blocks-' . $block_name . '-editor',
                 NPPF_BLOCKS_PLUGIN_URL . 'blocks/' . $block_name . '/editor.js',
-                array('wp-blocks', 'wp-element', 'wp-block-editor', 'wp-editor', 'wp-components', 'wp-i18n'),
+                array('wp-blocks', 'wp-element', 'wp-block-editor', 'wp-editor', 'wp-components', 'wp-i18n', 'wp-data'),
                 NPPF_BLOCKS_VERSION,
                 true
             );
+        } else {
+            error_log('NPPF: No editor.js found for block: ' . $block_name);
         }
     }
 }
