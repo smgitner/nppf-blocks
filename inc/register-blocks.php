@@ -2,9 +2,13 @@
 defined('ABSPATH') || exit;
 
 function nppf_blocks_register_blocks() {
+    // Debug: Log function call
+    error_log('nppf_blocks_register_blocks() called');
+    
     // Prevent duplicate registrations
     static $registered = false;
     if ($registered) {
+        error_log('Blocks already registered, skipping');
         return;
     }
     $registered = true;

@@ -32,6 +32,9 @@ function nppf_blocks_load_textdomain() {
 }
 add_action('init', 'nppf_blocks_load_textdomain');
 
+// Debug: Log plugin loading
+error_log('NPPF Blocks plugin loaded successfully');
+
 // Enqueue admin styles
 function nppf_blocks_admin_assets() {
     wp_enqueue_style(
