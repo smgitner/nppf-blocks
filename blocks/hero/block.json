@@ -59,6 +59,16 @@
     "buttonLinkRecipient": {
       "type": "number",
       "default": 0
+    },
+    "showOverlay": {
+      "type": "boolean",
+      "default": true
+    },
+    "overlayOpacity": {
+      "type": "number",
+      "default": 50,
+      "minimum": 0,
+      "maximum": 100
     }
   },
   "textdomain": "nppf-blocks",
