@@ -108,35 +108,37 @@
             });
         }, [setAttributes]);
 
-        const blockProps = useBlockProps({ 
-            className: 'nppf-cta'
+        const blockProps = useBlockProps({
+            className: 'nppf-cta',
+            style: {
+                width: '100vw',
+                marginLeft: 'calc(-50vw + 50%)',
+            },
+        });
+
+        const buttonWrapperProps = {
+            className: 'nppf-btn nppf-btn-outline',
+        };
+
+        if (linkValue.url) {
+            buttonWrapperProps.href = linkValue.url;
+            if (linkValue.opensInNewTab) {
+                buttonWrapperProps.target = '_blank';
+                buttonWrapperProps.rel = 'noopener noreferrer';
+            }
+        }
+
+        const buttonTextElement = wp.element.createElement(RichText, {
+            tagName: 'span',
+            className: 'nppf-btn-label',
+            value: buttonText || '',
+            onChange: (value) => setAttributes({ buttonText: value || '' }),
+            placeholder: __('DONATE', 'nppf-blocks'),
+            allowedFormats: [],
         });
 
         return wp.element.createElement(wp.element.Fragment, null,
             wp.element.createElement(InspectorControls, null,
-                wp.element.createElement(PanelBody, { title: __('CTA Settings', 'nppf-blocks') },
-                    wp.element.createElement(RichText, {
-                        tagName: 'h2',
-                        className: 'nppf-title',
-                        value: heading,
-                        onChange: (value) => setAttributes({ heading: value }),
-                        placeholder: __('Heading', 'nppf-blocks')
-                    }),
-                    wp.element.createElement(RichText, {
-                        tagName: 'p',
-                        className: 'nppf-subtitle',
-                        value: subtitle,
-                        onChange: (value) => setAttributes({ subtitle: value }),
-                        placeholder: __('Subtitle', 'nppf-blocks')
-                    }),
-                    wp.element.createElement(RichText, {
-                        tagName: 'span',
-                        className: 'nppf-btn nppf-btn-outline',
-                        value: buttonText,
-                        onChange: (value) => setAttributes({ buttonText: value }),
-                        placeholder: __('Button text', 'nppf-blocks')
-                    })
-                ),
                 wp.element.createElement(PanelBody, { title: __('Button Link', 'nppf-blocks'), initialOpen: true },
                     wp.element.createElement(LinkControl, {
                         value: linkValue,
@@ -152,29 +154,25 @@
                     })
                 )
             ),
-            wp.element.createElement('div', blockProps,
+            wp.element.createElement('section', blockProps,
                 wp.element.createElement('div', { className: 'nppf-container nppf-text-center' },
                     wp.element.createElement(RichText, {
                         tagName: 'h2',
                         className: 'nppf-title nppf-title-white',
-                        value: heading,
-                        onChange: (value) => setAttributes({ heading: value }),
-                        placeholder: __('Make a lasting impact. Become a donor today.', 'nppf-blocks')
+                        value: heading || '',
+                        onChange: (value) => setAttributes({ heading: value || '' }),
+                        placeholder: __('Make a lasting impact. Become a donor today.', 'nppf-blocks'),
+                        allowedFormats: [],
                     }),
                     wp.element.createElement(RichText, {
                         tagName: 'p',
                         className: 'nppf-subtitle',
-                        value: subtitle,
-                        onChange: (value) => setAttributes({ subtitle: value }),
-                        placeholder: __('Subtitle', 'nppf-blocks')
+                        value: subtitle || '',
+                        onChange: (value) => setAttributes({ subtitle: value || '' }),
+                        placeholder: __('Supporting photojournalism projects...', 'nppf-blocks'),
+                        allowedFormats: [],
                     }),
-                    wp.element.createElement(RichText, {
-                        tagName: 'span',
-                        className: 'nppf-btn nppf-btn-outline',
-                        value: buttonText,
-                        onChange: (value) => setAttributes({ buttonText: value }),
-                        placeholder: __('DONATE', 'nppf-blocks')
-                    })
+                    wp.element.createElement(linkValue.url ? 'a' : 'span', buttonWrapperProps, buttonTextElement)
                 )
             )
         );
