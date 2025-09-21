@@ -1,0 +1,16 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/what-we-do",
+  "title": "What We Do",
+  "category": "nppf-blocks",
+  "icon": "list-view",
+  "description": "What we do section (deprecated)",
+  "supports": {
+    "align": ["wide", "full"]
+  },
+  "attributes": {},
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,16 @@
+{
+  "apiVersion": 3,
+  "name": "nppf-blocks/scholarship-grid",
+  "title": "Scholarship Grid",
+  "category": "nppf-blocks",
+  "icon": "grid-view",
+  "description": "Display scholarship grid (deprecated)",
+  "supports": {
+    "align": ["wide", "full"]
+  },
+  "attributes": {},
+  "textdomain": "nppf-blocks",
+  "editorScript": "file:./editor.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php"
+}
